@@ -3,16 +3,208 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
+# Вектор
 ```{r}
-plot(cars)
+#Создайте вектор S1 со значениями от 1 до 10 
+S1 <- c(1:10); S1
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r}
+S1 <- scan()
+```
+```{r}
+S1
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r}
+S1 <- seq(1:10); S1
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+#C помощью дополнительного аргумента функции seq() создайте вектор S2 со значениями от 1 до 10 с  шагом приращения 0,5 (например,  k<-seq(from=5, to=10, by=1)). 
+
+S2 <- seq(from = 5, to = 10, by = 0.5); S2
+```
+
+```{r}
+#1.3 Объедините векторы S1 и S2 в вектор S (функция c()).
+S = c(S1, S2);S
+```
+
+```{r}
+#Выведите на экран 3, 4 и 5 значения вектора S (например, выделить элементы вектора V с 5 по 9,   V[5:9]).
+
+S[3:5]
+```
+
+```{r}
+#Выберите только первое и четвертое значения вектора S (например, выбрать третий и пятый элементы вектора V,   V[с(3,5)]  ).
+
+S[c(1, 4)]
+```
+
+# Таблица
+
+```{r}
+# 2.1 Создайте текстовые векторы с названиями городов (Сity) и пола (Sex), а также вектор со значениями численности представителей каждого пола (Number):
+
+city <- c("City1", "City1", "City2", "City2", "City3", "City3")
+sex <- c("Male", "Female", "Male", "Female", "Male", "Female")
+number <- c(12450, 10345, 5670, 5800, 25129, 26000)
+```
+
+```{r}
+#2.3 Теперь объедините эти три вектора в одну таблицу данных CITY с заголовками столбцов (Сity, Sex и Number) с помощью функции data.frame. 
+
+CITY = data.frame(city, sex, number); CITY
+```
+
+```{r}
+#2.4 Для визуального просмотра содержимого таблицы CITY используйте функцию str() (например, str(d)).
+
+str(CITY)
+```
+
+```{r}
+#2.5 При помощи команды names() выведите имена переменных, входящих в таблицу данных CITY (например, names(d)). 
+
+names(CITY)
+```
+
+```{r}
+#2.6 Извлеките элементы 1-3 из столбца Number таблицы CITY (например, из таблицы d столбца с1 извлекаем элементы со 2 по 4:     d$c1[2:4]).
+
+CITY$number[1:3]
+```
+
+```{r}
+#2.7 Извлеките все значения численности населения таблицы CITY, превышающие 10000.
+
+CITY$number[CITY$number > 10000]
+```
+
+```{r}
+#2.8 Извлеките все значения численности мужского населения таблицы CITY.
+
+CITY$number[CITY$sex == 'Male']
+```
+
+```{r}
+#2.9 Для просмотра трех первых и двух последних значений каждой переменной, входящей в состав таблицы данных CITY используйте функции head() и tail() соответственно.
+#Например, извлечем первые значения переменных из таблицы d:      head(d, n=1)
+#Теперь извлечем последние 4-ые значения:       tail(d, n=4)
+
+head(CITY, n = 3)
+tail(CITY, n = 2)
+```
+
+# Матрица
+```{r}
+#3.1  С помощью функции dim(x) создайте матрицу размерности 2×8.
+#Пример, создадим матрицу размерности 2×3:
+
+m1 <- seq(1:16)
+
+dim(m1) <- c(2, 8); m1
+```
+
+```{r}
+#3.2 Теперь с помощью функции matrix() создайте числовую матрицу размерности 4×6. 
+#	Пример:  m2 <- matrix(seq(1,6), nrow=2, ncol=3)
+
+m2 <- matrix(seq(1, 24), nrow = 4, ncol = 6);m2
+```
+
+```{r}
+#3.3 Транспонируйте матрицу (m3<-t(m2)). 
+
+m3 <- t(m2); m3
+```
+
+```{r}
+#3.4 Создайте квадратную матрицу и вычислите ее определитель.
+#Например: det(matrix(seq(1,4), nrow=2, ncol=2))
+
+det(matrix(seq(1, 16), nrow = 4, ncol = 4))
+```
+
+# Массив
+
+```{r}
+#4.1 Используя функцию array() создайте массив данных M из 24 элементов.
+M = array(seq(1, 24), dim = c(3, 4, 2)); M
+```
+
+```{r}
+#4.2 Проверьте с помощью функции is.array(x), является ли M массивом.
+
+is.array(M)
+```
+
+# Список
+
+```{r}
+#5.1 С помощью функции list() cоздайте список L1, состоящий из чисел от 1 до 6 и значений (TRUE, FALSE), повторяющихся три раза. 
+
+L1 <- list(1:6, rep(x = c(T, F), 3)); L1
+```
+
+```{r}
+# 5.2 Присвойте имена элементам списка L1 (integers, booleans) с помощью функции names().
+
+names(L1) <- c("integers", "booleans"); L1
+```
+ 
+# Фактор
+
+```{r}
+#6.1 Создайте вектор из 6-ти объектов, каждый из которых принадлежит одному из трех классов: Yes, No, Parhaps. Преобразуйте его в фактор.
+
+f1<-rep(c("Yes", "No", "Perhaps"), 2)
+f1<-factor(f1, level=c(c("Yes", "No", "Perhaps")))
+f1
+```
+
+# Фрейм
+
+```{r}
+#7.1 Воспользуйтесь функцией data.frame() для создания фрейма данных F1 из следующих элементов:
+b = c("a", "b", "c", "a")
+d = (1:4 %% 2 == 0)
+e = factor (c("soft", "hard", "soft", "medium"))
+F1 <- data.frame(b, d, e); F1
+```
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

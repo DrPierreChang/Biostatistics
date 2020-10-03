@@ -1,0 +1,321 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+data(Indometh)
+names(Indometh)
+```
+
+```{r}
+attach(Indometh)
+```
+
+```{r}
+plot(time, conc)
+```
+
+```{r}
+Mean1 <- tapply(conc, time, mean)
+Mean1
+```
+
+```{r}
+names(Mean1)
+```
+
+```{r}
+# создаем числовой вектор со значениями времени учета концентрации препарата:
+indo.times <- as.numeric(names(Mean1))
+
+# строим график:
+plot(indo.times, Mean1)
+```
+
+```{r}
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация")
+```
+
+```{r}
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация", type = "o")
+```
+
+```{r}
+plot(indo.times, Mean1, xlab="Время", ylab="Концентрация", xlim=c(0, 15))
+plot(indo.times, Mean1, xlab="Время", ylab="Концентрация", ylim=c(0, 5))
+```
+
+i
+```{r}
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация",
+       axes = TRUE, ann = TRUE)
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация",
+       axes = FALSE, ann = TRUE)
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация",
+       axes = FALSE, ann = FALSE)
+```
+
+```{r}
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация", log = "x")
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация", log = "y")
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация", log = "xy")
+```
+
+```{r}
+plot(indo.times, Mean1, xlab = "Время", ylab = "Концентрация",
+       main = "Скорость выведения индометацина", type = "o")
+```
+
+```{r}
+detach(Indometh)
+```
+
+```{r}
+plot(sin, -3*pi, 3*pi, col = "red", lwd = "3", main = "График функции Sin(x)" , xlab = "x", ylab= "Sin(x)" , sub = "Интервал изменения аргумента = (-3*pi, 3*pi)") 
+```
+
+```{r}
+ # Создадим свою функцию
+f <- function(x){return(2*x^2-3*x+5)}
+#Постройте график функции f на интервале (-5, 5)
+plot(f,-5,5)
+```
+
+```{r}
+ # Создадим свою функцию
+f <- function(x){return(3*x^2+5*x+100)}
+#Постройте график функции f на интервале (-5, 5)
+plot(f,-5,5)
+```
+
+```{r}
+# Данные по явке избирателей:
+percent.voted <- c(60, 40)
+
+# Распределение голосов:
+votes <- c(49.3, 19.2, 13.2, 11.7, 3.4, 1.0, 0.6)
+```
+
+```{r}
+names(percent.voted) <-c ("Проголосовали", "Не явились")
+
+names(votes) <- c("Единая Россия", "КПРФ", "Справедливая Россия", "ЛДПР", "Яблоко", "Патриоты России", "Правое дело")
+```
+
+```{r}
+percent.voted
+```
+
+```{r}
+votes
+```
+
+```{r}
+par(mfrow=c(2,1))
+```
+
+```{r}
+pie(percent.voted, radius = 0.9, cex = 0.6, main = "Явка")
+pie(votes, cex = 0.6, radius = 0.9, init.angle = -10,
+    main = "Распределение голосов")
+```
+
+```{r}
+pie(percent.voted, radius = 0.9, cex = 0.6, main = "Явка", 
+   col = c("black", "gray80"))
+
+pie(votes, cex = 0.6, radius = 0.9, init.angle = -10,
+    main = "Распределение голосов",
+    col = c(2:8))
+```
+
+```{r}
+data(mtcars)
+mtcars
+```
+
+```{r}
+dotchart(mtcars$mpg, labels = row.names(mtcars),
+   main="Экономия топлива у 32 моделей автомобилей",
+   xlab="Миль/галлон", cex = 0.8)
+
+```
+
+```{r}
+x <- mtcars[order(mtcars$mpg), ]
+```
+
+```{r}
+x$cyl <- factor(x$cyl)
+```
+
+```{r}
+x$color[x$cyl==4] <- 1
+x$color[x$cyl==6] <- 2
+x$color[x$cyl==8] <- 3
+```
+
+```{r}
+dotchart(x$mpg, labels = row.names(x),		
+       groups = x$cyl, gcolor = "blue", pch = 16, color = x$color,
+       main="Экономичность двигателя у 32 моделей автомобилей",
+       xlab="Миль/галлон", cex = 0.8)
+```
+
+```{r}
+X <- rnorm(n = 50, mean = 15, sd  = 5)
+hist(X, breaks = 20, freq = FALSE, col = "lightblue")
+```
+
+```{r}
+plot(density(X))
+```
+
+```{r}
+plot(density(X, bw = 0.8))
+```
+
+```{r}
+hist(X, breaks = 20, freq = FALSE, col = "lightblue",
+      xlab = "Переменная X",
+      ylab = "Плотность вероятности",
+      main = "Гистограмма, совмещенная кривой плотности")
+lines(density(X), col = "red", lwd = 2)
+```
+
+```{r}
+data(InsectSprays)
+```
+
+```{r}
+InsectSprays
+```
+
+```{r}
+boxplot(count ~ spray, data = InsectSprays)
+```
+
+```{r}
+boxplot(count ~ spray,
+            xlab = "Инсектициды",
+            ylab = "Количество выживших насекомых",
+            main = "Эффективность инсектицидов",
+            col = "GREEN", data = InsectSprays)
+```
+
+```{r}
+boxplot(count ~ spray,
+            ylab = "Инсектициды",
+            xlab = "Количество выживших насекомых",
+            main = "Эффективность инсектицидов",
+            col = "green", horizontal = TRUE,
+            data = InsectSprays)
+```
+
+```{r}
+plot(count ~ spray, data = InsectSprays)
+```
+
+```{r}
+data(InsectSprays)
+ InsectSprays 
+```
+
+```{r}
+attach(InsectSprays)
+```
+
+```{r}
+Means <- tapply(count, spray, mean) 
+```
+
+```{r}
+Means
+```
+
+```{r}
+barplot(Means, col = "steelblue", xlab = "Инсектицид", ylab = "Количество выживших насекомых") 
+```
+
+```{r}
+barplot(Means, col = "steelblue", xlab = "Инсектицид", ylab = "Количество выживших насекомых", border = "red", width = sqrt(Means))
+```
+
+```{r}
+barplot(Means, density = 20, col = "red", horiz = T, las = 1, ylab = "Инсектицид", xlab = "Количество выживших инсекомых") # аргумент las=1 заставляет названия инсектицидов принять вертикальное положение
+```
+ 
+```{r}
+barplot(Means, density = 20, angle = -45, space = 2, col = "red", horiz = TRUE, las = 1, ylab = "Инсектицид", xlab = "Количество выживших инсекомых")
+```
+
+```{r}
+library(MASS)
+data(genotype)
+genotype
+```
+
+```{r}
+means = with(genotype, tapply(Wt, list(Litter, Mother), mean))
+# Функция with() позволяет указать таблицу, из которой
+# функция tapply() должна брать данные для вычислений
+
+# Просмотрим содержимое матрицы means:
+means
+```
+
+```{r}
+barplot(means, beside = TRUE,
+       col = topo.colors(4),
+       legend.text = rownames(means),
+       xlab = "Выводок", ylab = "Вес, г",
+       ylim = c(0, 100))
+```
+
+```{r}
+barplot(means, beside = FALSE,col = topo.colors(4),
+         xlab = "Выводок", ylab = "Вес, г")
+```
+
+```{r}
+sds = with(genotype, tapply(Wt, list(Litter, Mother), sd))
+
+# Просмотрим результат:
+sds
+```
+
+```{r}
+b <- barplot(means, ylim = c(min(pretty(means-sds)),
+             max(pretty(means+sds))),
+             col = topo.colors(4),
+             beside = TRUE, xpd = FALSE,
+             ylab = "Вес, г", xlab = "Выводок",
+             legend.text=rownames(means))
+
+arrows(b, means+sds, b, means-sds, angle = 90, code = 3, length = 0.05)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
