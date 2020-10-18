@@ -1,0 +1,171 @@
+---
+title: "Расчет описательных статистик"
+output: html_notebook
+---
+
+```{r}
+sex <- rep(c("Male", "Female"), 50); sex
+age <- rep(c(1:16),7); age
+length(age); age = head(age, 100)
+temp = rep(seq(36, 39, 0.2), 7);temp
+length(temp); temp = head(temp, 100)
+data1 = data.frame(sex, age, temp); data1
+```
+
+```{r}
+str(data)
+```
+
+```{r}
+mean(age)
+median(age)
+var(age)
+sd(age)
+min(age)
+max(age)
+quantile(age)
+```
+
+```{r}
+summary(age)
+```
+```{r}
+summary(temp)
+```
+
+```{r}
+summary(data1$age[data1$sex == "Male"])
+```
+```{r}
+summary(data1$age[data1$sex == "Female"])
+```
+
+
+```{r}
+install.packages("moments")
+```
+
+```{r}
+library(moments)
+```
+
+Коэффициент крутости и ассиметрии при нормальном распределении должны быть близки нулю
+```{r}
+kurtosis(age)
+```
+
+```{r}
+skewness(age)
+```
+
+
+```{r}
+age1 = cut(age, breaks = c(0, 3, 7, 14, 17), labels = c("1", "2", "3", "4"));age1
+```
+
+```{r}
+temp1 = cut(temp, breaks = c(0, 37, 38, 39))
+table(temp1)
+```
+
+
+```{r}
+table(age1)
+```
+
+```{r}
+plot(density(age), col = "red", ylim = c(0, 0.1))
+```
+
+```{r}
+tapply(data1$temp, INDEX = data1$sex, FUN = summary )
+```
+
+
+```{r}
+which.min(data1$temp)
+which.max(data1$temp)
+```
+```{r}
+edit(data1)
+```
+
+
+```{r}
+View(data1)
+```
+
+```{r}
+View(mtcars)
+```
+
+```{r}
+rownames(mtcars)[which.min(mtcars$mpg)]
+rownames(mtcars)[which.max(mtcars$mpg)]
+```
+
+Недостающие данные NA
+
+```{r}
+mtcars$mpg[3] <- NA
+mean(mtcars$mpg, na.rm = TRUE)
+```
+
+```{r}
+#Убираем строчки с пропущенным значениями
+cars = na.omit(mtcars)
+```
+
+```{r}
+length(mtcars$mpg)
+length(cars$mpg)
+```
+
+Выбросы
+Значения, которые выходят за пределы допустимых значений
+```{r}
+boxplot(mtcars$mpg)
+```
+
+
+```{r}
+install.packages("outliers")
+```
+
+```{r}
+library(outliers)
+```
+
+```{r}
+grubbs.test(mtcars$mpg)
+```
+
+```{r}
+dixon.test(mtcars$mpg[5:34])
+```
+
+```{r}
+?mean
+```
+
+
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
