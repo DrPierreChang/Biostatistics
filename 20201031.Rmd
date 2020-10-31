@@ -1,0 +1,179 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(moments)
+```
+
+```{r}
+c
+```
+```{r}
+tapply(mtcars$mpg, mtcars$vs, FUN = kurtosis)
+```
+
+```{r}
+tapply(mtcars$mpg, mtcars$vs, FUN = shapiro.test)
+```
+
+
+```{r}
+chisq.test(mtcars$mpg, mtcars$vs)
+```
+
+```{r}
+t.test(mtcars$mpg, mtcars$vs)
+```
+
+```{r}
+names(trees)
+```
+
+```{r}
+shapiro.test(trees$Girth)
+shapiro.test(trees$Volume)
+shapiro.test(trees$Height)
+```
+
+```{r}
+chisq.test(trees$Girth, trees$Volume)
+```
+
+```{r}
+View(randu)
+```
+
+
+```{r}
+ks.test(randu$x, randu$y)
+```
+
+```{r}
+View(ldeaths)
+m <- matrix(ldeaths, 6, 12)
+```
+
+```{r}
+ldeaths
+```
+
+```{r}
+m
+```
+
+```{r}
+chisq.test(m[1,], m[6,])
+```
+```{r}
+t.test(m[1,], m[6,])
+t.test(m[2,], m[6,])
+t.test(m[3,], m[6,])
+t.test(m[4,], m[6,])
+t.test(m[5,], m[6,])
+t.test(m[6,], m[6,])
+```
+
+```{r}
+HairEyeColor
+```
+
+```{r}
+m1 <- HairEyeColor[,, "Male"]
+m2 <- HairEyeColor[,, "Female"]
+```
+
+```{r}
+mosaicplot(m1, col = c("royalblue", "purple", "0", "turquoise"))
+```
+
+
+
+
+```{r}
+x1 <- rnorm(n = 100, mean = 3, sd = 2)
+```
+
+```{r}
+summary(rnorm(n = 100, mean = 3, sd = 2))
+```
+```{r}
+var(x)
+```
+
+
+```{r}
+x2 <- rbinom(500, 10, 0.5)
+```
+
+```{r}
+summary(x2)
+```
+```{r}
+ecdf(x1)
+```
+```{r}
+ecdf(x2)
+```
+library
+
+```{r}
+par(mfrow = c(2, 1))
+plot(ecdf(x1))
+plot(ecdf(x2))
+```
+
+```{r}
+x2_100 <- (x2[401:500])
+```
+```{r}
+length(x2_100)
+```
+```{r}
+chisq.test(x1, x2_100)
+```
+```{r}
+shapiro.test(x2_100)
+```
+
+```{r}
+cor(x1, x2_100, method = c("spearman"))
+```
+```{r}
+plot(sort(x1), sort(x2_100))
+```
+
+```{r}
+m3 <- matrix(c(x1, x2_100), 10, 10)
+
+```
+```{r}
+m3
+```
+
+```{r}
+x4 <- matrix(x2, 20, 5)
+```
+
+```{r}
+x4
+```
+
+```{r}
+cor(x4, method = "spearman")
+```
+```{r}
+scale(x2)
+```
+
+```{r}
+x2_st<-(x2-mean(x2))/sd(x2);x2_st
+```
+
+```{r}
+round(log(x1), 3)
+```
+
+
+
