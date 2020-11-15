@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+Turtle <- read.csv("Turtle.csv", sep= ";", header = TRUE )
+Turtle
+```
+
+
+```{r}
+shapiro.test(Turtle$length)
+shapiro.test(Turtle$width)
+shapiro.test(Turtle$height)
+shapiro.test(Turtle$weight)
+```
+```{r}
+cor(Turtle)
+```
+```{r}
+lm.p<-lm(Turtle$weight~., data = Turtle)
+summary(lm.p)
+```
+
+```{r}
+plot(lm.p)
+```
+
+
+
