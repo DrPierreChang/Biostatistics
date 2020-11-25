@@ -12,14 +12,15 @@ output: html_notebook
 
 
 ```{r}
-install.packages("MASS")
+# install.packages("MASS")
 ```
+
 ```{r}
 library(MASS)
 ```
 
 ```{r}
-View(Cars93)
+# View(Cars93)
 ```
 
 ```{r}
@@ -221,6 +222,11 @@ fisher.test(Cars93$Type, Cars93$Origin)
 ```
 
 ```{r}
+library(DescTools)
+```
+
+
+```{r}
 # Примените G-теста для проверки независимости переменных Type и Origin.
 GTest(Cars93$Type, Cars93$Origin)
 ```
@@ -274,6 +280,7 @@ drug
 
 mantelhaen.test(drug)
 ```
+
 
 
 
