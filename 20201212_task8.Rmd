@@ -1,0 +1,355 @@
+---
+title: "Задание 8"
+output: html_notebook
+---
+
+```{r}
+# 1
+# Загрузите таблицу данных (datasets) NMES1988 с сайта:
+# https://vincentarelbundock.github.io/Rdatasets/datasets.html
+
+# Фрейм данных содержит 4 406 наблюдений по 19 переменным.
+# Используем для анализа только следующие переменные:
+
+# visits - Количество посещений кабинета врача.
+# health - Фактор, указывающий на самооценку состояния здоровья;
+# уровни "poor", "average"(эталонная категория), "excellent".
+# chronic - Количество хронических состояний.
+# adl - Фактор, указывающий, есть ли у человека состояние,
+# ограничивающее повседневную деятельность ("limited") или нет ("normal").
+# region - Фактор -  область проживания; уровни:  northeast, midwest, west, other.
+# age - Возраст в годах (разделенный на 10).
+# gender - Фактор, указывающий на пол.
+# married – Фактор: человек женат?
+# school - Количество лет обучения.
+# income - Семейный доход в 10 000 долларов США.
+# employed – Фактор: работает ли человек?
+# insurance – Фактор: застраховано ли физическое лицо частной страховкой?
+
+# загружаем данные
+nmes <- read.csv("nmes.csv")
+
+# оставляем только необходимые переменные
+nmes <- nmes[c("visits", "health", "chronic", "adl", "region", "age", "gender",
+                "married", "school", "income", "employed", "insurance")]
+```
+
+```{r}
+# переменная helth явлется порядковой
+# поэтому необходимо добавить параметр ordered = True
+# установить порядок, в котором возрастают значения с помощью levels
+
+nmes$health <- factor(nmes$health, order = TRUE,
+                         levels = c("poor", "average", "excellent"))
+```
+
+
+```{r}
+# 2
+# Удалить пропущенные значения в таблице данных,
+# если они имеются (функция na.omit()).
+
+na.omit(nmes)
+```
+
+```{r}
+str(nmes)
+```
+
+```{r}
+# 3
+
+# Проверьте данные на нормальность распределения
+# (функция shapiro.test() или ks.test()).
+
+shapiro.test(nmes$visits)
+shapiro.test(nmes$chronic)
+shapiro.test(nmes$age)
+shapiro.test(nmes$school)
+shapiro.test(nmes$income)
+```
+
+```{r}
+# При уровне значимости 0,05 гипотеза о нормальности распределения должна быть
+# отвергнута для всех переменных, т.к. p-val во всех случаях <0.05.
+```
+
+# Нужно определит значимые переменные для построения модели
+
+```{r}
+str(nmes)
+```
+
+```{r}
+# 4
+
+# Определите степень зависимости переменной visits (зависимая переменная) с другими переменными с помощью корреляционного анализа (коэффициентов корреляции).
+
+
+
+cor(nmes$visits, nmes$chronic, method = "kendall")
+cor(nmes$visits, nmes$age, method = "kendall")
+cor(nmes$visits, nmes$school, method = "kendall")
+cor(nmes$visits, nmes$income, method = "kendall")
+```
+```{r}
+# Все коэффициенты корреляции < 0.5
+```
+
+
+```{r}
+# Проверьте значимость коэффициентов корреляции, значения которых меньше 0.5.
+```
+
+```{r}
+# H0 = Коэффициент коррелиции Кенделла равен нулю в генеральной совокупности
+# H0 = центры распределений, из которых происходят сравниваемые выборки, смещены относительно друг друга
+cor.test(nmes$visits, nmes$chronic, method = "kendall")
+cor.test(nmes$visits, nmes$age, method = "kendall")
+cor.test(nmes$visits, nmes$school, method = "kendall")
+cor.test(nmes$visits, nmes$income, method = "kendall")
+wilcox.test(visits~employed, data = nmes)
+wilcox.test(visits~insurance, data = nmes)
+wilcox.test(visits~married, data = nmes)
+wilcox.test(visits~gender, data = nmes)
+```
+```{r}
+# тепень зависимости для числовых переменных проверяем с помощью корреляции
+# Кендалла, для факторных — критерий Вилкоксона.
+
+# По рузультатам проверки числовых переменных принимаем H0 для 
+# nmes$visits and nmes$income
+
+# По результатам проверки факторных переменных принимаем H0 для
+# gender
+
+# Вывод: нет статистически значимой корреляции между visits и income, gender
+```
+
+
+
+```{r}
+# Проведите отдельно для мужчин и женщин.
+# Сравните полученные результаты.
+
+nmes_male <- nmes[nmes$gender == "male",]
+nmes_female <- nmes[nmes$gender == "female",]
+```
+
+```{r}
+# Определяем степень зависимости переменной visits (зависимая переменная) с другими переменными с помощью корреляционного анализа (коэффициентов корреляции)
+# отдельно для мужчин и женщин
+
+cor(nmes_male$visits, nmes_male$chronic, method = "kendall")
+cor(nmes_male$visits, nmes_male$age, method = "kendall")
+cor(nmes_male$visits, nmes_male$school, method = "kendall")
+cor(nmes_male$visits, nmes_male$income, method = "kendall")
+
+cor(nmes_female$visits, nmes_female$chronic, method = "kendall")
+cor(nmes_female$visits, nmes_female$age, method = "kendall")
+cor(nmes_female$visits, nmes_female$school, method = "kendall")
+cor(nmes_female$visits, nmes_female$income, method = "kendall")
+```
+```{r}
+# Все коэффициенты корреляции < 0.5
+```
+
+```{r}
+str(nmes)
+```
+
+
+```{r}
+# Проверим значимость коэфициентов корреляции отдельно для мужчин и женщин
+# H0 = Коэффициент коррелиции Кендела равен нулю в генеральной совокупности
+# H0 = центры распределений, из которых происходят сравниваемые выборки, смещены относительно друг друга (wilcox.test)
+
+cor.test(nmes_male$visits, nmes_male$chronic, method = "kendall")
+cor.test(nmes_male$visits, nmes_male$age, method = "kendall")
+cor.test(nmes_male$visits, nmes_male$school, method = "kendall")
+cor.test(nmes_male$visits, nmes_male$income, method = "kendall")
+
+cor.test(nmes_female$visits, nmes_female$chronic, method = "kendall")
+cor.test(nmes_female$visits, nmes_female$age, method = "kendall")
+cor.test(nmes_female$visits, nmes_female$school, method = "kendall")
+cor.test(nmes_female$visits, nmes_female$income, method = "kendall")
+
+wilcox.test(visits~adl, data = nmes_male, paired = F)
+wilcox.test(visits~married, data = nmes_male, paired = F)
+wilcox.test(visits~employed, data = nmes_male, paired = F)
+wilcox.test(visits~insurance, data = nmes_male, paired = F)
+
+wilcox.test(visits~adl, data = nmes_female, paired = F)
+wilcox.test(visits~married, data = nmes_female, paired = F)
+wilcox.test(visits~employed, data = nmes_female, paired = F)
+wilcox.test(visits~insurance, data = nmes_female, paired = F)
+```
+
+```{r}
+# Принимаем нулевую гипотезу для:
+
+# visits by employed male
+# visits by married female
+
+# Вывод: видим, что как для мужчин, так и для женщин осутствет статистически
+# значимая корреляция между visits с одной стороный и employed, married с другой
+# Результат отличается от анализа всей совокупности данных
+```
+
+```{r}
+# 5
+# Для выбора значимых переменных используйте (в зависимости от типа переменных) следующие критерии:
+
+# а) на независимость хи-квадрат (chisq.test());
+# б) тест Стьюдента для сравнения средних двух нормально распределенных выборок (t.test());
+# в) тест ранговых сумм Вилкоксона для независимых групп (wilcox.test()).
+```
+
+```{r}
+# У нас не было нормльно распределенных выборок, поэтому мы не можем использовать
+# тест Стьюдента
+# хи-квадрат Пирсона
+```
+
+```{r}
+# анализируем числовые переменные с помощью wilcox.test
+# Нулевая гипотеза = центры распрделений из которых происходят, сравниваемые
+# выборки смещены относительно друг друга
+```
+
+
+```{r}
+wilcox.test(nmes$visits, nmes$chronic, paired = F)
+wilcox.test(nmes$visits, nmes$age, paired = F)
+wilcox.test(nmes$visits, nmes$school, paired = F)
+wilcox.test(nmes$visits, nmes$income, paired = F)
+```
+
+```{r}
+# Все p-value меньше 0,05, поэтому мы не можем отклонить нулевую гипотезу о том,
+# центры распрделений из которых происходят, сравниваемые выборки
+# смещены относительно друг друга
+```
+
+```{r}
+# Для построения модели выявлены следующие значимые переменные:
+
+# chronic
+# age
+# school
+# income
+# region
+# married
+```
+
+```{r}
+# 6
+
+# Построить две регрессионные модели с помощью функций lm()и glm() с расчетом среднеквадратических ошибок (MSE) и значения критерия AIC.
+
+# Зависимая переменная - visits - количество посещений кабинета врача,
+# не зависимые – значимо влияющие на зависимую переменную.
+
+# Сравните полученные результаты.
+
+# При регрессионном анализе используйте перебор переменных с помощью удаления тех,
+# которые незначимы и уровень значимости по критерию Стьюдента наибольший,
+# т.е. удаляется та незначимая переменная, значение p-value при которой наибольшее из всех, и т.д.
+```
+
+```{r}
+# Строим две модели с помощью lm и glm
+fit_lm <- lm(visits ~ chronic + age + school + income
+              + region + married, data = nmes)
+
+fit_glm <- glm(visits ~ chronic + age + school + income
+              + region + married, data = nmes)
+```
+
+```{r}
+summary(fit_lm)
+summary(fit_glm)
+AIC(fit_lm)
+AIC(fit_glm)
+```
+
+```{r}
+# fit lm
+
+# Multiple R-squared:  0.07859
+# Множественный коэфициент детерминации означает,
+# что  7.8 % отклонений от средней зависимой переменной будет
+# учтено в построенной модели.
+# AIC: 29001 - высокое значение говорит о неадекватности модели
+# Выявлены незначимые переменные:
+# age 0.20540
+# income 0.40285
+# married 0.10803 
+# region 0.89853 
+
+# fti glm 
+
+# AIC: 29000.96 - равен AIC полученному для модели fit lm
+# модель построенная с помощью glm также является неадекватной
+```
+
+```{r}
+#  повторно строим модель, постепено исключая незначимые переменные
+# с наибольшим p-value
+fit_lm2 <- lm(visits ~ chronic + age + income + married + school, data = nmes)
+```
+
+```{r}
+# Multiple R-squared уменьшился
+summary(fit_lm2)
+```
+
+```{r}
+# AIC не уменьшился
+AIC(fit_lm)
+```
+```{r}
+# удаляем переменную income
+fit_lm3 <- lm(visits ~ chronic + age + married + school, data = nmes)
+```
+
+```{r}
+summary(fit_lm3)
+```
+
+```{r}
+# наблюдается увеличение AIC. Модель стала еще более неадекватной
+AIC(fit_lm3)
+```
+
+```{r}
+# удаляем следующую переменную и возвращаем предыдущую
+fit_lm4 <- lm(visits ~ chronic + income + school, data = nmes)
+```
+
+```{r}
+summary(fit_lm4)
+```
+
+```{r}
+AIC(fit_lm4)
+```
+```{r}
+# удаление незначимых переменных не помогло сделать модель более адвекватной
+```
+
+```{r}
+# Вывод
+
+# На этапе оценки коэфициента коррелиция не было обнаружено сильной коррелиции
+# между visits и другими числовысм переменными
+
+# были отобраны значимые переменные с помощью хи квадрат и вилконсона
+
+# при построении модели были обнаружены незначимые переменые
+# По высокому значению AIC был сделан вывод о неадекватности модели
+
+# перебор переменных не дал результата
+```
+
+
