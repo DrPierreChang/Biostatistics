@@ -1,0 +1,249 @@
+---
+title: "Задание 10"
+output: html_notebook
+---
+
+```{r}
+#1
+
+# 1. Загрузите таблицу данных (datasets) NMES1988 с сайта:
+# https://vincentarelbundock.github.io/Rdatasets/datasets.html
+# Фрейм данных содержит 4 406 наблюдений по 19 переменным. Используем для анализа только следующие переменные:
+# visits - Количество посещений кабинета врача.
+# health - Фактор, указывающий на самооценку состояния здоровья;
+# уровни "poor", #"average"(эталонная #категория), "excellent".
+# adl - Фактор, указывающий, есть ли у человека состояние, ограничивающее повседневную деятельность ("limited") или нет ("normal").
+# region - Фактор -  область проживания; уровни:  northeast, midwest, west, other.
+# gender - Фактор, указывающий на пол.
+# married – Фактор: человек женат?
+# employed – Фактор: работает ли человек?
+# insurance – Фактор: застраховано ли физическое лицо частной страховкой?
+# С помощью дисперсионного анализа определите,
+# какие факторы влияют на переменную visits #(количество посещений кабинета врача).
+
+# загружаем данные
+nmes <- read.csv("nmes.csv")
+
+# оставляем только необходимые переменные
+nmes <- nmes[c("visits", "health", "adl", "region", "gender",
+                "married", "employed", "insurance")]
+```
+
+```{r}
+# переменная helth явлется порядковой
+# поэтому необходимо добавить параметр ordered = True
+# установить порядок, в котором возрастают значения с помощью levels
+
+nmes$health <- factor(nmes$health, order = TRUE,
+                         levels = c("poor", "average", "excellent"))
+```
+
+```{r}
+attach(nmes)
+```
+
+```{r}
+View(nmes)
+```
+
+```{r}
+# Нулевые гипотезы, которые необходимо проверить:
+
+# health не влияет на visits
+# adl не влияет на visits
+# region не влияет на visits
+# gender не влияет на  visits
+# married не влияет на visits
+# employed не влияет на visits
+# insurance не влияет на visits
+```
+
+
+
+```{r}
+summary(aov(visits~health))
+summary(aov(visits~adl))
+summary(aov(visits~region))
+summary(aov(visits~gender))
+summary(aov(visits~married))
+summary(aov(visits~employed))
+summary(aov(visits~insurance))
+```
+
+```{r}
+# Результаты дисперсионного анализа указывают на то, что на visits
+# значимо влияют:
+
+# health 
+# adl 
+# region
+# gender
+# insurance  
+```
+
+```{r}
+detach(nmes)
+```
+
+
+```{r}
+# 2 
+
+# Откройте файл Echinoderms.csv (Вес иглокожих – условия выращивания морских ежиков). Проведите двухфакторный дисперсионный анализ для выявления влияния факторов Грунт и Вид (priming и view), Грунт и Район (priming и region), Грунт и Условия (priming и conditions) на Вес иглокожих (weight) (3 анализа). Опишите полученные результаты.
+```
+
+```{r}
+# Нулевые гипотезы, которые необходимо проверить
+
+# 1-й анализ
+# priming не влияет на weight
+# view не влияет на weight
+# Одновременно priming и view не влияют на weight
+
+# 2-й анализ
+# priming не влияет на weight
+# region не влияет на weight
+# Одновременно priming и region не влияют на weight
+
+# 3-й анализ
+# priming не влияет на weight
+# conditions не влияет на weight
+# Одновременно priming и conditions не влияют на weight
+```
+
+```{r}
+library(readr)
+echin <- read_delim("Echinoderms.csv", 
+    ";", escape_double = FALSE,
+    col_types = cols(region = col_factor(levels = c("Русский", 
+        "Алексеева", "Попов")), 
+        conditions = col_factor(levels = c("Аквакультура", 
+            "Естественные")), 
+        view = col_factor(levels = c("серый", 
+            "черный")), priming = col_factor(levels = c("камни", 
+            "ил", "песок"))), locale = locale(encoding = "WINDOWS-1251"), 
+    trim_ws = TRUE)
+```
+
+```{r}
+View(echin)
+```
+
+
+
+```{r}
+attach(echin)
+```
+
+
+```{r}
+summary(aov(weight~priming*view))
+summary(aov(weight~priming*region))
+summary(aov(weight~priming*conditions))
+```
+
+```{r}
+# Результаты двухфакторного дисперсионного анализа:
+
+# 1-й анализ
+# Pr(>F) для priming  < 0,05. HO1 отклонена
+# Pr(>F) для view  > 0,05. HO2 принята
+# Pr(>F) priming:view > 0,05. HO3 принята
+
+# 2-й анализ
+# Pr(>F) для priming  < 0,05. HO1 отклонена
+# Pr(>F) для region  > 0,05. HO2 принята
+# Pr(>F) priming:region  > 0,05. HO3 принята
+
+# 3-й анализ
+# Pr(>F) для priming  > 0,05. HO1 принята
+# Pr(>F) для conditions  > 0,05. HO2 принята
+# Pr(>F) priming:conditions  > 0,05. HO3 принята
+```
+
+```{r}
+# Взаимодействие между факторами можно проиллюстрировать при помощи функции interaction.plot()
+
+interaction.plot(priming, view, weight, type="b", col=c("red","blue"))
+interaction.plot(priming, region, weight, type="b", col=c("red","blue"))
+interaction.plot(priming, conditions, weight, type="b", col=c("red","blue"))
+```
+
+```{r}
+detach(echin)
+```
+
+```{r}
+# 3.
+# Откройте файл university2.csv.
+# Проведите многомерный дисперсионный анализ для определения зависимости выбора университета (University) от рейтингов:
+# Yslov_educ - условия для получения качественного образования,
+# ранг; Yslov_job - уровень востребованности выпускников работодателями, ранг; Yslov_science - уровень научно-исследовательской деятельности, ранг.
+# Опишите полученные результаты.
+```
+
+```{r}
+library(readr)
+univer <- read_delim("university2.csv", 
+    ";", escape_double = FALSE, locale = locale(grouping_mark = "."), 
+    trim_ws = TRUE)
+```
+
+```{r}
+View(univer)
+```
+
+
+```{r}
+attach(univer)
+```
+
+```{r}
+# объединяем переменные в матрицу
+y <- cbind(Yslov_educ, Yslov_job, Yslov_science)
+```
+
+```{r}
+# расчитываем среднее значение по категориям
+aggregate(y, by = list(University), FUN = mean)
+```
+
+```{r}
+# можно расчитать ковариацию
+cov(y)
+```
+
+```{r}
+# Проведем дисперсионный анализ для проверки нулевой гипотезы о том,
+# что Yslov_educ, Yslov_job, Yslov_science не зависят от University
+```
+
+```{r}
+fit <- manova(y ~ University)
+```
+
+```{r}
+# выводим результат анализа
+summary(fit)
+```
+
+```{r}
+# Статистически значимая величина F-статистики свидетельствует о том,
+# что наши три группы рейтингов зависят от University,
+# (т.к. Pr=2.2e-16<0.05  нулевую гипотезу отвергаем).
+```
+
+```{r}
+# проведем однофакторные дисперсионные анализы для каждой зависимой переменной
+summary(aov(fit))
+```
+
+```{r}
+# Статистически значимая величина F-статистики свидетельствует о том,
+# что каждый рейтинг по отдельности зависит от University
+```
+
+```{r}
+detach(univer)
+```
+
